@@ -35,7 +35,7 @@ const Home = () => {
                 style={{ color: '#001E2B' }}
               >
                 Modernize <br />
-                Your <span style={{ color: '#00684A' }}>City's Pulse.</span>
+                Your <span style={{ color: '#00684A' }}>City's Infrastructure.</span>
               </h1>
 
               <p 
