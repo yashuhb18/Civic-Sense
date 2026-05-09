@@ -188,7 +188,7 @@ const Dashboard = () => {
                   <Link to={`/complaint/${issue._id}`}>
                     <div className="relative aspect-video overflow-hidden">
                       <img 
-                        src={issue.image ? `${backendUrl}${issue.image}` : 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=800&q=80'} 
+                        src={issue.imageUrl ? `${backendUrl}${issue.imageUrl}` : 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=800&q=80'} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         alt={issue.title}
                       />
