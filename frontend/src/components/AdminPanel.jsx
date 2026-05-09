@@ -19,6 +19,8 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
 
+  const backendUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -236,7 +238,7 @@ const AdminPanel = () => {
                     <td className="px-6 py-4">
                       <div className="w-14 h-14 rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
                         <img 
-                          src={issue.imageUrl ? `http://localhost:5001${issue.imageUrl}` : 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=100&q=60'}
+                          src={issue.imageUrl ? `${backendUrl}${issue.imageUrl}` : 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=100&q=60'}
                           alt={issue.title}
                           className="w-full h-full object-cover"
                         />
