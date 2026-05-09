@@ -5,7 +5,7 @@ import api from '../services/api';
 import { 
   Plus, Search, Filter, Clock, CheckCircle, AlertCircle, 
   Map as MapIcon, ChevronRight, Activity, TrendingUp,
-  LayoutDashboard, Settings, HelpCircle, LogOut, ShieldAlert, MapPin
+  LayoutDashboard, Settings, HelpCircle, LogOut, ShieldAlert
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
@@ -21,8 +21,7 @@ const Dashboard = () => {
     const fetchIssues = async () => {
       try {
         const response = await api.get('/issues/my-issues');
-        // Fix: Access the issues array from the paginated response object
-        setIssues(response.data.issues || []);
+        setIssues(response.data);
       } catch (error) {
         console.error('Error fetching issues:', error);
       } finally {
@@ -85,6 +84,7 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Upgrade Plan Card - Atlas Style */}
         <div className="p-4 m-6 bg-[#001E2B] rounded-xl text-white space-y-4">
           <p className="text-[10px] font-bold uppercase tracking-widest text-[#00ED64]">Professional Account</p>
           <p className="text-sm font-medium opacity-80">Access city-wide AI analytics and real-time alerts.</p>
@@ -112,8 +112,8 @@ const Dashboard = () => {
               <ShieldAlert size={12} />
               <span className="text-[10px] font-bold uppercase tracking-widest">Active Pulse Dashboard</span>
             </div>
-            <h1 className="text-4xl font-bold text-slate-900 tracking-tight" style={{ color: '#001E2B' }}>Welcome, {user?.name}</h1>
-            <p className="text-slate-500 font-medium text-sm" style={{ color: '#64748b' }}>Monitor and manage your community contributions in real-time.</p>
+            <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Welcome, {user?.name}</h1>
+            <p className="text-slate-500 font-medium text-sm">Monitor and manage your community contributions in real-time.</p>
           </div>
           <Link to="/create-complaint">
             <button className="btn-atlas-primary h-14 px-8 shadow-lg shadow-[#00684A]/20">
@@ -136,7 +136,7 @@ const Dashboard = () => {
               </div>
               <div className="space-y-1">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">{stat.label}</p>
-                <p className="text-4xl font-bold text-slate-900 tracking-tighter" style={{ color: '#001E2B' }}>{stat.value}</p>
+                <p className="text-4xl font-bold text-slate-900 tracking-tighter">{stat.value}</p>
               </div>
             </div>
           ))}
@@ -145,7 +145,7 @@ const Dashboard = () => {
         {/* 📋 REPORT LIST - ATLAS STYLE */}
         <div className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight" style={{ color: '#001E2B' }}>Active Deployments</h2>
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Active Deployments</h2>
             <div className="flex items-center gap-3">
               <div className="relative hidden sm:block">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -204,8 +204,8 @@ const Dashboard = () => {
                         <MapPin size={10} />
                         {issue.department || 'General Public'}
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#00684A] transition-colors line-clamp-1" style={{ color: '#001E2B' }}>{issue.title}</h3>
-                      <p className="text-slate-500 text-xs font-medium line-clamp-2 leading-relaxed" style={{ color: '#64748b' }}>
+                      <h3 className="text-xl font-bold text-slate-900 group-hover:text-[#00684A] transition-colors line-clamp-1">{issue.title}</h3>
+                      <p className="text-slate-500 text-xs font-medium line-clamp-2 leading-relaxed">
                         {issue.description}
                       </p>
                       <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
@@ -225,7 +225,7 @@ const Dashboard = () => {
                 <Plus className="text-slate-200" size={40} />
               </div>
               <div className="space-y-2">
-                <p className="text-xl font-bold text-slate-900" style={{ color: '#001E2B' }}>No active reports found</p>
+                <p className="text-xl font-bold text-slate-900">No active reports found</p>
                 <p className="text-slate-500 text-sm max-w-xs mx-auto">Start by reporting an infrastructure issue in your local community.</p>
               </div>
               <Link to="/create-complaint">

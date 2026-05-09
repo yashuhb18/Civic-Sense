@@ -1,87 +1,106 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { User, Mail, Lock, ArrowRight, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
     setLoading(true);
     const success = await register(name, email, password);
     setLoading(false);
-    if (success) {
-      navigate('/');
-    }
+    if (success) navigate('/dashboard');
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
-      <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-      {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-gray-700 mb-2">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+    <div className="min-h-[80vh] flex items-center justify-center p-6 relative">
+      {/* Background Grid Fix */}
+      <div className="absolute inset-0 atlas-grid-bg pointer-events-none" />
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-md w-full relative z-10"
+      >
+        <div className="text-center space-y-4 mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-[#00684A] text-white shadow-2xl shadow-[#00684A]/30 mb-6">
+            <ShieldAlert size={40} />
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900" style={{ color: '#001E2B' }}>Join the Pulse</h1>
+          <p className="text-slate-500 font-medium" style={{ color: '#64748b' }}>Be the voice for your community infrastructure.</p>
         </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Confirm Password</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? 'Registering...' : 'Register'}
-        </button>
-      </form>
-      <p className="mt-4 text-center text-gray-600">
-        Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
-      </p>
+
+        <form onSubmit={handleSubmit} className="atlas-card p-10 space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Full Name</label>
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+              <input
+                type="text"
+                placeholder="Citizen Name"
+                className="input-atlas pl-12 h-14"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Email Address</label>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+              <input
+                type="email"
+                placeholder="name@company.com"
+                className="input-atlas pl-12 h-14"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Secure Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="input-atlas pl-12 h-14"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-atlas-primary w-full h-14 text-lg shadow-lg shadow-[#00684A]/20"
+          >
+            {loading ? 'Creating Account...' : 'Create Citizen Account'}
+            {!loading && <ArrowRight size={20} />}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-slate-500 font-medium">
+          Already registered?{' '}
+          <Link to="/login" className="text-[#00684A] font-bold hover:underline underline-offset-4" style={{ color: '#00684A' }}>
+            Sign In
+          </Link>
+        </p>
+      </motion.div>
     </div>
   );
 };

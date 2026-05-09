@@ -35,10 +35,10 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await api.post('/auth/login', { email, password });
-      const { token, user } = response.data;
+      const { token, ...userData } = response.data;
       localStorage.setItem('token', token);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
+      setUser(userData);
       toast.success('Login successful!');
       return true;
     } catch (error) {
@@ -47,13 +47,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const adminLogin = async (email, password) => {
+    try {
+      const response = await api.post('/auth/admin/login', { email, password });
+      const { token, ...userData } = response.data;
+      localStorage.setItem('token', token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUser(userData);
+      toast.success('Admin login successful!');
+      return true;
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Admin login failed');
+      return false;
+    }
+  };
+
   const register = async (name, email, password) => {
     try {
       const response = await api.post('/auth/register', { name, email, password });
-      const { token, user } = response.data;
+      const { token, ...userData } = response.data;
       localStorage.setItem('token', token);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
+      setUser(userData);
       toast.success('Registration successful!');
       return true;
     } catch (error) {
@@ -70,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, adminLogin, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
