@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import api from '../services/api';
 import { 
@@ -26,6 +26,15 @@ const LocationPicker = ({ onLocationSelect }) => {
       onLocationSelect(e.latlng);
     },
   });
+  return null;
+};
+
+// Map center updater component
+const MapUpdater = ({ center }) => {
+  const map = useMap();
+  React.useEffect(() => {
+    map.flyTo(center, 15);
+  }, [center, map]);
   return null;
 };
 
@@ -133,6 +142,29 @@ const CreateIssue = () => {
 
   const handleLocationSelect = (latlng) => {
     setLocation({ lat: latlng.lat, lng: latlng.lng, address: `${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}` });
+  };
+
+  const detectLocation = () => {
+    if (navigator.geolocation) {
+      toast.loading('Detecting location...', { id: 'location' });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latlng = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          handleLocationSelect(latlng);
+          toast.success('Live location detected!', { id: 'location' });
+        },
+        (error) => {
+          console.error(error);
+          toast.error('Failed to detect location. Please ensure location services are allowed in your browser settings.', { id: 'location' });
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      toast.error('Geolocation is not supported by your browser.');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -406,11 +438,21 @@ const CreateIssue = () => {
 
                 {/* 🗺️ LIVE MAP - Pin Location */}
                 <div className="atlas-card p-6 space-y-4">
-                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                    <Target className="text-[#00684A]" size={18} />
-                    <h3 className="font-bold text-xs uppercase tracking-widest" style={{ color: '#001E2B' }}>
-                      Live Map — Click to Pin Location
-                    </h3>
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div className="flex items-center gap-3">
+                      <Target className="text-[#00684A]" size={18} />
+                      <h3 className="font-bold text-xs uppercase tracking-widest" style={{ color: '#001E2B' }}>
+                        Live Map — Pin Location
+                      </h3>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={detectLocation}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#E3FCF7] text-[#00684A] text-[10px] font-bold uppercase tracking-widest hover:bg-[#00684A] hover:text-white transition-all"
+                    >
+                      <MapPin size={12} />
+                      Detect Live Location
+                    </button>
                   </div>
                   <div className="rounded-xl overflow-hidden border border-slate-200" style={{ height: '350px' }}>
                     <MapContainer
@@ -423,6 +465,7 @@ const CreateIssue = () => {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                       />
+                      <MapUpdater center={[location.lat, location.lng]} />
                       <LocationPicker onLocationSelect={handleLocationSelect} />
                       <Marker position={[location.lat, location.lng]} />
                     </MapContainer>
