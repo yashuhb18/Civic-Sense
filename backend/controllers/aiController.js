@@ -38,9 +38,27 @@ exports.analyzeImage = async (req, res) => {
           aiPriorityScore: 85,
           impactSummary: "यातायात में बाधा उत्पन्न हो रही है।",
           department: "लोक निर्माण विभाग"
+        },
+        Tamil: { 
+          title: "கடுமையான சாலை சேதம்", 
+          description: "பரபரப்பான சந்திப்புக்கு அருகில் பல ஆழமான பள்ளங்கள் கண்டறியப்பட்டன.", 
+          category: "Roads",
+          aiPriorityScore: 85,
+          impactSummary: "தினசரி பயணிகளை பாதிக்கிறது.",
+          department: "பொதுப்பணித்துறை"
+        },
+        Telugu: { 
+          title: "తీవ్రమైన రహదారి నష్టం", 
+          description: "రద్దీగా ఉండే కూడలికి సమీపంలో లోతైన గుంతలు ఉన్నాయి.", 
+          category: "Roads",
+          aiPriorityScore: 85,
+          impactSummary: "రోజువారీ ప్రయాణికులకు ఇబ్బంది.",
+          department: "ప్రజాపనుల శాఖ"
         }
       };
-      return res.json(mockData[language] || mockData.English);
+      
+      const responseData = mockData[language] || mockData.English;
+      return res.json({ ...responseData, isMock: true });
     }
 
     // Use Gemini 1.5 Flash for fast analysis

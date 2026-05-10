@@ -46,6 +46,7 @@ const CreateIssue = () => {
   const [location, setLocation] = useState({ lat: 12.9716, lng: 77.5946, address: '' });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState('');
+  const [language, setLanguage] = useState('English');
   const [loading, setLoading] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState(null);
@@ -118,7 +119,7 @@ const CreateIssue = () => {
     try {
       const formData = new FormData();
       formData.append('image', image);
-      formData.append('language', 'English');
+      formData.append('language', language);
 
       const response = await api.post('/issues/analyze-image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -132,7 +133,11 @@ const CreateIssue = () => {
       if (data.description) setDescription(data.description);
       if (data.category) setCategory(data.category);
 
-      toast.success('AI Analysis Complete! Fields auto-populated.');
+      if (data.isMock) {
+        toast.error('Using DEMO AI. Add Gemini API Key to backend/.env for real photo analysis.', { duration: 6000 });
+      } else {
+        toast.success('AI Analysis Complete! Fields auto-populated.');
+      }
     } catch (error) {
       toast.error('AI analysis failed. Fill in details manually.');
     } finally {
@@ -240,18 +245,31 @@ const CreateIssue = () => {
                       </h3>
                     </div>
                     {image && (
-                      <button
-                        type="button"
-                        onClick={analyzeWithAI}
-                        disabled={aiLoading}
-                        className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#00684A] text-white text-xs font-bold hover:bg-[#00593f] transition-all shadow-md shadow-[#00684A]/20 disabled:opacity-50"
-                      >
-                        {aiLoading ? (
-                          <><Loader2 className="animate-spin" size={14} /> Analyzing...</>
-                        ) : (
-                          <><Brain size={14} /> Run AI Analysis</>
-                        )}
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <select
+                          className="input-atlas py-2 px-3 h-auto text-xs border-slate-200"
+                          value={language}
+                          onChange={(e) => setLanguage(e.target.value)}
+                        >
+                          <option value="English">English</option>
+                          <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
+                          <option value="Hindi">हिंदी (Hindi)</option>
+                          <option value="Tamil">தமிழ் (Tamil)</option>
+                          <option value="Telugu">తెలుగు (Telugu)</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={analyzeWithAI}
+                          disabled={aiLoading}
+                          className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#00684A] text-white text-xs font-bold hover:bg-[#00593f] transition-all shadow-md shadow-[#00684A]/20 disabled:opacity-50"
+                        >
+                          {aiLoading ? (
+                            <><Loader2 className="animate-spin" size={14} /> Analyzing...</>
+                          ) : (
+                            <><Brain size={14} /> Run AI</>
+                          )}
+                        </button>
+                      </div>
                     )}
                   </div>
 
