@@ -142,7 +142,9 @@ const CreateIssue = () => {
         toast.success('AI Analysis Complete! Fields auto-populated.');
       }
     } catch (error) {
-      toast.error('AI analysis failed. Fill in details manually.');
+      console.error('AI analysis failed:', error);
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || 'AI analysis failed';
+      toast.error(`Error: ${errorMessage}`);
     } finally {
       setAiLoading(false);
     }

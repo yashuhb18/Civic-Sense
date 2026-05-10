@@ -87,18 +87,23 @@ exports.analyzeImage = async (req, res) => {
     const result = await model.generateContent([prompt, imageData]);
     const response = await result.response;
     let text = response.text();
+    console.log("RAW AI RESPONSE:", text);
     
-    // Clean JSON response
-    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    const analysis = JSON.parse(text);
+    // Safely extract JSON even if AI adds conversational text
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("AI did not return valid JSON format.");
+    }
+    
+    const analysis = JSON.parse(jsonMatch[0]);
 
     res.json(analysis);
   } catch (error) {
     console.error("AI Analysis Error:", error);
-    // Return a fallback if AI fails
+    // Send the actual error message to the frontend so the user can see it
     res.status(500).json({ 
       message: "AI Analysis failed", 
-      error: error.message,
+      error: error.message || "Unknown server error",
       fallback: {
         title: "New Civic Issue",
         description: "Please provide details manually.",
