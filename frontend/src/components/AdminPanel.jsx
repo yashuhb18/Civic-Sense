@@ -8,12 +8,15 @@ import {
 import { 
   AlertCircle, CheckCircle, Clock, MapPin, Trash2, CheckCircle2, 
   Activity, ShieldAlert, Users, TrendingUp, Download, Filter, Search,
-  Menu, Bell, Settings, LayoutDashboard, Database, Globe, Eye, Image as ImageIcon
+  Menu, Bell, Settings, LayoutDashboard, Database, Globe, Eye, Image as ImageIcon,
+  Terminal, Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import IssueMap from './IssueMap';
 
 const AdminPanel = () => {
+  const [activeTab, setActiveTab] = useState('Overview');
   const [issues, setIssues] = useState([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, inProgress: 0, resolved: 0 });
   const [loading, setLoading] = useState(true);
@@ -86,19 +89,19 @@ const AdminPanel = () => {
           <div className="space-y-1">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-4 mb-4">Command Center</p>
             {[
-              { icon: <LayoutDashboard size={18} />, label: 'Overview', active: true },
+              { icon: <LayoutDashboard size={18} />, label: 'Overview' },
               { icon: <Globe size={18} />, label: 'City Mesh' },
               { icon: <Users size={18} />, label: 'Authorities' },
-              { icon: <Activity size={18} />, label: 'System Logs' },
+              { icon: <Terminal size={18} />, label: 'System Logs' },
             ].map((item, i) => (
-              <a 
+              <button 
                 key={i}
-                href="#" 
-                className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold transition-all ${item.active ? 'bg-[#E3FCF7] text-[#00684A] border-l-4 border-[#00684A]' : 'text-slate-500 hover:bg-slate-50'}`}
+                onClick={() => setActiveTab(item.label)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold transition-all ${activeTab === item.label ? 'bg-[#E3FCF7] text-[#00684A] border-l-4 border-[#00684A]' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 {item.icon}
                 {item.label}
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -121,15 +124,77 @@ const AdminPanel = () => {
               <ShieldAlert size={12} />
               <span className="text-[10px] font-bold uppercase tracking-widest">Global Governance Mode</span>
             </div>
-            <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Municipal Overview</h1>
-            <p className="text-slate-500 font-medium text-sm">Central command for cross-departmental issue resolution.</p>
+            <h1 className="text-4xl font-bold text-slate-900 tracking-tight">
+              {activeTab === 'Overview' && 'Municipal Overview'}
+              {activeTab === 'City Mesh' && 'Live City Mesh'}
+              {activeTab === 'Authorities' && 'Authority Management'}
+              {activeTab === 'System Logs' && 'Security & System Logs'}
+            </h1>
+            <p className="text-slate-500 font-medium text-sm">
+              {activeTab === 'Overview' && 'Central command for cross-departmental issue resolution.'}
+              {activeTab === 'City Mesh' && 'Geospatial visualization of active infrastructure reports.'}
+              {activeTab === 'Authorities' && 'Manage departmental access and verified officials.'}
+              {activeTab === 'System Logs' && 'Audit trail of administrative actions and AI system events.'}
+            </p>
           </div>
-          <button className="btn-atlas-secondary">
-            <Download size={18} className="text-[#00684A]" />
-            Export Health Report
-          </button>
+          {activeTab === 'Overview' && (
+            <button className="btn-atlas-secondary">
+              <Download size={18} className="text-[#00684A]" />
+              Export Health Report
+            </button>
+          )}
         </header>
 
+        {activeTab === 'City Mesh' && (
+          <div className="atlas-card p-2 h-[700px] animate-slide-up z-0 relative">
+            <IssueMap />
+          </div>
+        )}
+
+        {activeTab === 'Authorities' && (
+          <div className="atlas-card p-8 animate-slide-up">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold">Verified Officials</h3>
+              <button className="px-4 py-2 bg-[#00684A] text-white rounded font-bold text-sm">Add Official</button>
+            </div>
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-slate-50 text-[10px] uppercase tracking-widest text-slate-400">
+                  <th className="p-4">Name</th>
+                  <th className="p-4">Department</th>
+                  <th className="p-4">Role</th>
+                  <th className="p-4">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium text-sm">
+                <tr><td className="p-4 flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">AK</div>Arjun Kumar</td><td className="p-4">Infrastructure</td><td className="p-4">Chief Engineer</td><td className="p-4"><span className="text-emerald-500 bg-emerald-50 px-2 py-1 rounded text-xs">Active</span></td></tr>
+                <tr><td className="p-4 flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">SM</div>Sarah Menon</td><td className="p-4">Water Supply</td><td className="p-4">Director</td><td className="p-4"><span className="text-emerald-500 bg-emerald-50 px-2 py-1 rounded text-xs">Active</span></td></tr>
+                <tr><td className="p-4 flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs">RP</div>Ravi P.</td><td className="p-4">Public Safety</td><td className="p-4">Coordinator</td><td className="p-4"><span className="text-slate-500 bg-slate-100 px-2 py-1 rounded text-xs">Offline</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === 'System Logs' && (
+          <div className="atlas-card p-6 bg-slate-900 text-green-400 font-mono text-xs overflow-y-auto h-[600px] animate-slide-up">
+            <div className="mb-4 text-white opacity-50 flex justify-between border-b border-slate-800 pb-2"><span>[SYSTEM AUDIT TRAIL]</span><span>Press CTRL+C to abort</span></div>
+            <div className="space-y-3 opacity-80 leading-relaxed">
+              <p>[{new Date().toISOString()}] <span className="text-blue-400">INFO</span>: Authenticated admin Gov-Root from IP 192.168.1.42</p>
+              <p>[{new Date(Date.now() - 10000).toISOString()}] <span className="text-purple-400">AI_ENGINE</span>: Processed image UUID-8472. Identified 'Pothole' (Confidence: 94%)</p>
+              <p>[{new Date(Date.now() - 45000).toISOString()}] <span className="text-emerald-400">DB_SYNC</span>: Replicated 14 new citizen reports to central MongoDB Atlas shard.</p>
+              <p>[{new Date(Date.now() - 120000).toISOString()}] <span className="text-amber-400">WARN</span>: High volume of reports detected in zone 'Indiranagar'. Scaling auto-categorization workers.</p>
+              <p>[{new Date(Date.now() - 360000).toISOString()}] <span className="text-rose-400">SECURITY</span>: Blocked 3 unauthorized access attempts to /api/admin/purge.</p>
+              <p>[{new Date(Date.now() - 500000).toISOString()}] <span className="text-blue-400">INFO</span>: Gov-Root updated issue 64b3a... status to 'resolved'.</p>
+            </div>
+            <div className="mt-6 flex items-center gap-2 text-white font-bold">
+              <Terminal size={14} />
+              <span className="animate-pulse">_</span>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'Overview' && (
+          <div className="animate-slide-up">
         {/* 📊 CORE METRICS */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           {[
@@ -321,6 +386,8 @@ const AdminPanel = () => {
             </table>
           </div>
         </div>
+          </div>
+        )}
       </main>
     </div>
   );
