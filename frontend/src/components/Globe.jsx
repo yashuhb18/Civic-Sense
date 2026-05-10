@@ -1,82 +1,80 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import createGlobe from 'cobe';
+import { Canvas, useFrame } from '@react-three/fiber';
 
-const Globe = () => {
-  const canvasRef = useRef();
+const WireframeSphere = () => {
+  const meshRef = useRef();
 
-  useEffect(() => {
-    let phi = 0;
-    
-    const globe = createGlobe(canvasRef.current, {
-      devicePixelRatio: 2,
-      width: 900,
-      height: 900,
-      phi: 0,
-      theta: 0,
-      dark: 1, // dark map (white dots)
-      diffuse: 1.2,
-      mapSamples: 24000,
-      mapBrightness: 6,
-      baseColor: [0.05, 0.05, 0.05], // Dark globe base
-      markerColor: [0, 0.93, 0.39], // #00ED64 (MongoDB green)
-      glowColor: [0.1, 0.1, 0.1], // Subtle dark glow
-      markers: [
-        { location: [20.5937, 78.9629], size: 0.08 }, // India
-        { location: [37.7749, -122.4194], size: 0.05 }, // SF
-        { location: [51.5074, -0.1278], size: 0.05 }, // London
-        { location: [-33.8688, 151.2093], size: 0.05 } // Sydney
-      ],
-      onRender: (state) => {
-        state.phi = phi;
-        phi += 0.005;
-      }
-    });
-
-    return () => {
-      globe.destroy();
-    };
-  }, []);
+  useFrame((state, delta) => {
+    // Slowly revolve the globe all the time
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.15;
+      meshRef.current.rotation.x += delta * 0.05;
+    }
+  });
 
   return (
+    <mesh ref={meshRef}>
+      {/* High-segment sphere for a dense, detailed wireframe grid */}
+      <sphereGeometry args={[2.8, 64, 64]} />
+      <meshBasicMaterial 
+        color="#3b82f6" // Sci-fi blue matching the image
+        wireframe={true}
+        transparent={true}
+        opacity={0.3}
+      />
+    </mesh>
+  );
+};
+
+const Globe = () => {
+  return (
     <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
-      {/* 🌍 MONGODB ATLAS STYLE GLOBE */}
+      {/* 🌍 SCI-FI WIREFRAME GLOBE */}
       <div className="relative w-64 h-64 lg:w-[450px] lg:h-[450px]">
         {/* Subtle Outer Glow */}
-        <div className="absolute inset-0 bg-[#00ED64]/10 rounded-full blur-[60px]" />
+        <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-[80px]" />
         
-        {/* The Cobe Globe */}
+        {/* The Three.js Canvas */}
         <div className="absolute inset-0 flex items-center justify-center">
-            <canvas
-              ref={canvasRef}
-              style={{ width: '100%', height: '100%', contain: 'layout paint size', opacity: 0.9 }}
-            />
+          <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
+            <WireframeSphere />
+          </Canvas>
         </div>
 
-        {/* Orbiting Ring (Thin Green) */}
+        {/* Orbiting Ring (Thin Blue) */}
         <motion.div 
           animate={{ rotate: 360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="absolute -inset-10 border border-[#00684A]/10 border-dashed rounded-full"
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          className="absolute -inset-10 border border-blue-500/20 border-dashed rounded-full"
         />
 
         {/* Dynamic Nodes */}
         <div className="absolute inset-0">
           {[
-            { label: 'CivicSync Active', pos: 'top-10 left-10' },
-            { label: 'Verified Access', pos: 'bottom-20 right-10' }
+            { label: 'System Ready', pos: 'top-10 left-10' },
+            { label: 'Scan ID: HS_6.0', pos: 'bottom-20 right-10' }
           ].map((node, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.5, duration: 1 }}
-              className={`absolute ${node.pos} bg-white border border-slate-200 px-3 py-1.5 rounded shadow-sm flex items-center gap-2`}
+              className={`absolute ${node.pos} bg-[#09111c]/80 backdrop-blur-sm border border-blue-500/30 px-3 py-1.5 rounded shadow-[0_0_15px_rgba(59,130,246,0.2)] flex items-center gap-2`}
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-[#00ED64] animate-pulse" />
-              <span className="text-[8px] font-bold uppercase tracking-widest text-[#001E2B]">{node.label}</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_5px_rgba(96,165,250,0.8)]" />
+              <span className="text-[8px] font-bold uppercase tracking-widest text-blue-100">{node.label}</span>
             </motion.div>
           ))}
+        </div>
+
+        {/* Scanning Line overlay */}
+        <div className="absolute inset-0 overflow-hidden rounded-full">
+          <motion.div
+            animate={{ top: ['0%', '100%', '0%'] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            className="absolute left-0 w-full h-[1px] bg-blue-400/40 shadow-[0_0_15px_rgba(59,130,246,0.8)] z-10"
+          />
         </div>
       </div>
     </div>
