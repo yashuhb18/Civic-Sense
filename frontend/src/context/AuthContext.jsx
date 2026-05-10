@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token');
     if (token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUser();
@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data);
     } catch (error) {
       localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
       delete api.defaults.headers.common['Authorization'];
     } finally {
       setLoading(false);
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/login', { email, password });
       const { token, ...userData } = response.data;
       localStorage.setItem('token', token);
+      sessionStorage.removeItem('token');
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(userData);
       toast.success('Login successful!');
@@ -51,7 +53,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.post('/auth/admin/login', { email, password });
       const { token, ...userData } = response.data;
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
+      localStorage.removeItem('token');
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(userData);
       toast.success('Admin login successful!');
@@ -67,6 +70,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/register', { name, email, password });
       const { token, ...userData } = response.data;
       localStorage.setItem('token', token);
+      sessionStorage.removeItem('token');
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(userData);
       toast.success('Account created! Welcome to CivicSync 🎉');
@@ -80,6 +84,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     delete api.defaults.headers.common['Authorization'];
     setUser(null);
     toast.success('Logged out successfully');
