@@ -69,10 +69,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(userData);
-      toast.success('Registration successful!');
+      toast.success('Account created! Welcome to CivicSync 🎉');
       return true;
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      const message = error.response?.data?.message || 'Registration failed. Please check your connection and try again.';
+      toast.error(message);
       return false;
     }
   };
