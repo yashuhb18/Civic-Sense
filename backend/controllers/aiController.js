@@ -64,7 +64,8 @@ exports.analyzeImage = async (req, res) => {
     // Use Gemini 2.5 Flash for fast analysis
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    const imageBuffer = fs.readFileSync(req.file.path);
+    // Get image buffer (handles both memory and disk storage)
+    const imageBuffer = req.file.buffer || fs.readFileSync(req.file.path);
     const imageData = {
       inlineData: {
         data: imageBuffer.toString("base64"),
