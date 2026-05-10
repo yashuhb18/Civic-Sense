@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Moon, Sun, Bell, User, LogOut, Lock, ShieldAlert } from 'lucide-react';
+import { Moon, Sun, Bell, User, LogOut, Lock, ShieldAlert, Settings, LayoutDashboard } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -79,16 +91,53 @@ const Navbar = () => {
           )}
 
           {user ? (
-            <div className="flex items-center space-x-4 pl-4 border-l border-slate-200">
-              <div className="w-9 h-9 rounded-full bg-[#E3FCF7] flex items-center justify-center border border-[#00684A]/10">
-                <User size={18} className="text-[#00684A]" />
-              </div>
+            <div className="flex items-center space-x-4 pl-4 border-l border-slate-200 relative" ref={dropdownRef}>
               <button 
-                onClick={handleLogout}
-                className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                onClick={() => setShowDropdown(!showDropdown)}
+                className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all focus:outline-none ${showDropdown ? 'bg-[#00684A] border-[#00684A] shadow-md text-white' : 'bg-[#E3FCF7] border-[#00684A]/10 text-[#00684A] hover:shadow-md'}`}
               >
-                <LogOut size={20} />
+                <User size={18} className="current-color" />
               </button>
+              
+              {/* Profile Dropdown */}
+              {showDropdown && (
+                <div className="absolute top-12 right-0 w-64 bg-white border border-slate-200 rounded-xl shadow-xl py-2 animate-slide-up origin-top-right z-50">
+                  <div className="px-4 py-3 border-b border-slate-100">
+                    <p className="text-sm font-bold text-slate-900">{user.name}</p>
+                    <p className="text-xs font-medium text-slate-500 truncate">{user.email}</p>
+                    <span className="inline-block mt-2 px-2 py-0.5 bg-slate-100 text-slate-600 text-[9px] font-bold uppercase tracking-widest rounded">
+                      {user.role}
+                    </span>
+                  </div>
+                  
+                  <div className="py-2 flex flex-col">
+                    {user.role !== 'admin' ? (
+                      <Link to="/dashboard" onClick={() => setShowDropdown(false)} className="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#00684A] transition-colors">
+                        <LayoutDashboard size={16} /> Dashboard
+                      </Link>
+                    ) : (
+                      <Link to="/admin" onClick={() => setShowDropdown(false)} className="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#00684A] transition-colors">
+                        <ShieldAlert size={16} /> Command Center
+                      </Link>
+                    )}
+                    
+                    {user.role !== 'admin' && (
+                      <Link to="/settings" onClick={() => setShowDropdown(false)} className="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#00684A] transition-colors">
+                        <Settings size={16} /> Account Settings
+                      </Link>
+                    )}
+                  </div>
+                  
+                  <div className="pt-2 border-t border-slate-100">
+                    <button 
+                      onClick={() => { setShowDropdown(false); handleLogout(); }}
+                      className="w-full flex items-center gap-3 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                    >
+                      <LogOut size={16} /> Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex items-center space-x-3">
