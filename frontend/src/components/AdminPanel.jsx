@@ -22,11 +22,49 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
 
+  // Authorities State
+  const [showAddOfficial, setShowAddOfficial] = useState(false);
+  const [newOfficial, setNewOfficial] = useState({ name: '', dept: 'Infrastructure', role: '' });
+  const [officials, setOfficials] = useState([
+    { id: 1, name: 'Arjun Kumar', initials: 'AK', dept: 'Infrastructure', role: 'Chief Engineer', status: 'Active', color: 'indigo' },
+    { id: 2, name: 'Sarah Menon', initials: 'SM', dept: 'Water Supply', role: 'Director', status: 'Active', color: 'emerald' },
+    { id: 3, name: 'Ravi P.', initials: 'RP', dept: 'Public Safety', role: 'Coordinator', status: 'Offline', color: 'slate' },
+  ]);
+
+  // System Logs State
+  const [logs, setLogs] = useState([
+    `[${new Date(Date.now() - 500000).toISOString()}] INFO: Gov-Root updated issue 64b3a... status to 'resolved'.`,
+    `[${new Date(Date.now() - 360000).toISOString()}] SECURITY: Blocked 3 unauthorized access attempts to /api/admin/purge.`,
+    `[${new Date(Date.now() - 120000).toISOString()}] WARN: High volume of reports detected in zone 'Indiranagar'. Scaling auto-categorization workers.`,
+    `[${new Date(Date.now() - 45000).toISOString()}] DB_SYNC: Replicated 14 new citizen reports to central MongoDB Atlas shard.`,
+    `[${new Date(Date.now() - 10000).toISOString()}] AI_ENGINE: Processed image UUID-8472. Identified 'Pothole' (Confidence: 94%)`,
+    `[${new Date().toISOString()}] INFO: Authenticated admin Gov-Root from IP 192.168.1.42`,
+  ]);
+
   const backendUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === 'System Logs') {
+      const interval = setInterval(() => {
+        const fakeEvents = [
+          "AI_ENGINE: Image classification complete. No hazards detected.",
+          "NETWORK: Node 47 heartbeat ping successful.",
+          "SECURITY: Anonymous connection closed safely.",
+          "DB_SYNC: Optimizing geospatial indices...",
+          "INFO: Fetching latest satellite overlay.",
+          "WARN: High CPU utilization on Worker Node 3.",
+          "INFO: User #4912 successfully registered."
+        ];
+        const event = fakeEvents[Math.floor(Math.random() * fakeEvents.length)];
+        setLogs(prev => [...prev, `[${new Date().toISOString()}] ${event}`].slice(-25));
+      }, 2500);
+      return () => clearInterval(interval);
+    }
+  }, [activeTab]);
 
   const fetchData = async () => {
     try {
@@ -80,6 +118,24 @@ const AdminPanel = () => {
   ];
 
   const COLORS = ['#F59E0B', '#6366F1', '#00684A'];
+
+  const handleAddOfficial = (e) => {
+    e.preventDefault();
+    if (!newOfficial.name || !newOfficial.role) return;
+    const initials = newOfficial.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+    setOfficials([...officials, { 
+      id: Date.now(), 
+      name: newOfficial.name, 
+      initials, 
+      dept: newOfficial.dept, 
+      role: newOfficial.role, 
+      status: 'Active', 
+      color: 'blue' 
+    }]);
+    setNewOfficial({ name: '', dept: 'Infrastructure', role: '' });
+    setShowAddOfficial(false);
+    toast.success('Official access granted.');
+  };
 
   return (
     <div className="flex min-h-screen bg-[#F9FBFA] pt-16">
@@ -155,40 +211,101 @@ const AdminPanel = () => {
           <div className="atlas-card p-8 animate-slide-up">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold">Verified Officials</h3>
-              <button className="px-4 py-2 bg-[#00684A] text-white rounded font-bold text-sm">Add Official</button>
+              <button onClick={() => setShowAddOfficial(true)} className="px-4 py-2 bg-[#00684A] text-white rounded font-bold text-sm">Add Official</button>
             </div>
-            <table className="w-full text-left">
+
+            {/* ADD OFFICIAL MODAL */}
+            {showAddOfficial && (
+              <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
+                  <h3 className="text-xl font-bold text-slate-900 mb-4">Grant Official Access</h3>
+                  <form onSubmit={handleAddOfficial} className="space-y-4">
+                    <div>
+                      <label className="text-xs font-bold uppercase text-slate-500">Full Name</label>
+                      <input type="text" className="input-atlas h-10 mt-1 text-sm" value={newOfficial.name} onChange={e => setNewOfficial({...newOfficial, name: e.target.value})} required placeholder="E.g. Jane Doe" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase text-slate-500">Department</label>
+                      <select className="input-atlas h-10 mt-1 text-sm" value={newOfficial.dept} onChange={e => setNewOfficial({...newOfficial, dept: e.target.value})}>
+                        <option>Infrastructure</option>
+                        <option>Water Supply</option>
+                        <option>Public Safety</option>
+                        <option>Sanitation</option>
+                        <option>Transportation</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase text-slate-500">Role / Title</label>
+                      <input type="text" className="input-atlas h-10 mt-1 text-sm" value={newOfficial.role} onChange={e => setNewOfficial({...newOfficial, role: e.target.value})} required placeholder="E.g. Senior Inspector" />
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <button type="button" onClick={() => setShowAddOfficial(false)} className="flex-1 btn-atlas-secondary">Cancel</button>
+                      <button type="submit" className="flex-1 btn-atlas-primary">Add Authority</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            <table className="w-full text-left mt-4">
               <thead>
                 <tr className="bg-slate-50 text-[10px] uppercase tracking-widest text-slate-400">
-                  <th className="p-4">Name</th>
+                  <th className="p-4 rounded-tl-lg">Name</th>
                   <th className="p-4">Department</th>
                   <th className="p-4">Role</th>
-                  <th className="p-4">Status</th>
+                  <th className="p-4 rounded-tr-lg">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium text-sm">
-                <tr><td className="p-4 flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">AK</div>Arjun Kumar</td><td className="p-4">Infrastructure</td><td className="p-4">Chief Engineer</td><td className="p-4"><span className="text-emerald-500 bg-emerald-50 px-2 py-1 rounded text-xs">Active</span></td></tr>
-                <tr><td className="p-4 flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">SM</div>Sarah Menon</td><td className="p-4">Water Supply</td><td className="p-4">Director</td><td className="p-4"><span className="text-emerald-500 bg-emerald-50 px-2 py-1 rounded text-xs">Active</span></td></tr>
-                <tr><td className="p-4 flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs">RP</div>Ravi P.</td><td className="p-4">Public Safety</td><td className="p-4">Coordinator</td><td className="p-4"><span className="text-slate-500 bg-slate-100 px-2 py-1 rounded text-xs">Offline</span></td></tr>
+                {officials.map(official => (
+                  <tr key={official.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="p-4 flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full bg-${official.color}-100 flex items-center justify-center text-${official.color}-700 font-bold text-xs shrink-0`}>
+                        {official.initials}
+                      </div>
+                      <span className="text-slate-900 font-semibold">{official.name}</span>
+                    </td>
+                    <td className="p-4 text-slate-600">{official.dept}</td>
+                    <td className="p-4 text-slate-600">{official.role}</td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded text-xs font-bold ${official.status === 'Active' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500'}`}>
+                        {official.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         )}
 
         {activeTab === 'System Logs' && (
-          <div className="atlas-card p-6 bg-slate-900 text-green-400 font-mono text-xs overflow-y-auto h-[600px] animate-slide-up">
-            <div className="mb-4 text-white opacity-50 flex justify-between border-b border-slate-800 pb-2"><span>[SYSTEM AUDIT TRAIL]</span><span>Press CTRL+C to abort</span></div>
-            <div className="space-y-3 opacity-80 leading-relaxed">
-              <p>[{new Date().toISOString()}] <span className="text-blue-400">INFO</span>: Authenticated admin Gov-Root from IP 192.168.1.42</p>
-              <p>[{new Date(Date.now() - 10000).toISOString()}] <span className="text-purple-400">AI_ENGINE</span>: Processed image UUID-8472. Identified 'Pothole' (Confidence: 94%)</p>
-              <p>[{new Date(Date.now() - 45000).toISOString()}] <span className="text-emerald-400">DB_SYNC</span>: Replicated 14 new citizen reports to central MongoDB Atlas shard.</p>
-              <p>[{new Date(Date.now() - 120000).toISOString()}] <span className="text-amber-400">WARN</span>: High volume of reports detected in zone 'Indiranagar'. Scaling auto-categorization workers.</p>
-              <p>[{new Date(Date.now() - 360000).toISOString()}] <span className="text-rose-400">SECURITY</span>: Blocked 3 unauthorized access attempts to /api/admin/purge.</p>
-              <p>[{new Date(Date.now() - 500000).toISOString()}] <span className="text-blue-400">INFO</span>: Gov-Root updated issue 64b3a... status to 'resolved'.</p>
+          <div className="atlas-card p-6 bg-slate-900 font-mono text-xs overflow-y-auto h-[600px] animate-slide-up flex flex-col">
+            <div className="mb-4 text-slate-400 flex justify-between border-b border-slate-800 pb-4">
+              <span className="font-bold tracking-widest">SYSTEM AUDIT TRAIL</span>
+              <span className="opacity-50">Press CTRL+C to abort</span>
             </div>
-            <div className="mt-6 flex items-center gap-2 text-white font-bold">
-              <Terminal size={14} />
-              <span className="animate-pulse">_</span>
+            <div className="space-y-3 flex-1 overflow-y-auto pr-4 custom-scrollbar">
+              {logs.map((log, i) => {
+                let colorClass = 'text-emerald-400 !important';
+                if (log.includes('WARN')) colorClass = 'text-amber-400 !important';
+                if (log.includes('SECURITY') || log.includes('ERROR')) colorClass = 'text-rose-400 !important';
+                if (log.includes('INFO') || log.includes('NETWORK')) colorClass = 'text-blue-400 !important';
+                if (log.includes('AI_ENGINE')) colorClass = 'text-purple-400 !important';
+                
+                return (
+                  <p key={i} className="leading-relaxed" style={{ color: colorClass.includes('emerald') ? '#34d399' : colorClass.includes('amber') ? '#fbbf24' : colorClass.includes('rose') ? '#fb7185' : colorClass.includes('blue') ? '#60a5fa' : colorClass.includes('purple') ? '#c084fc' : '#34d399' }}>
+                    {log}
+                  </p>
+                );
+              })}
+            </div>
+            <div className="mt-4 pt-4 border-t border-slate-800 flex items-center gap-3" style={{ color: '#34d399' }}>
+              <Terminal size={16} />
+              <div className="flex-1 flex">
+                <span className="mr-2">gov-root@civicsync:~$</span>
+                <span className="animate-pulse w-2 h-4 bg-emerald-400 block mt-0.5" />
+              </div>
             </div>
           </div>
         )}
