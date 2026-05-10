@@ -31,10 +31,13 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-72 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col p-8 z-50">
       <div className="mb-12 flex items-center gap-3">
-        <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
-          <Map className="text-white" size={24} />
+        <div className="w-12 h-12 bg-[#00684A] rounded-2xl flex items-center justify-center shadow-lg shadow-[#00684A]/20">
+          <Activity className="text-[#00ED64]" size={26} />
         </div>
-        <h2 className="text-xl font-black tracking-tighter uppercase">CivicSync</h2>
+        <div className="flex flex-col">
+          <h2 className="text-xl font-black tracking-tighter text-[#001E2B] leading-none">CIVIC<span className="text-[#00684A]">SYNC</span></h2>
+          <span className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">Pulse Platform</span>
+        </div>
       </div>
 
       <nav className="flex-1 space-y-8">

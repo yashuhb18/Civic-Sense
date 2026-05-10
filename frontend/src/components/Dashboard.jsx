@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
+import Sidebar from './Sidebar';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -58,63 +59,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#F9FBFA] pt-16">
-      {/* 🟢 ATLAS STYLE SIDEBAR */}
-      <aside className="w-64 bg-white border-r border-slate-200 hidden lg:flex flex-col fixed h-[calc(100vh-64px)] top-16">
-        <div className="p-6 space-y-8 flex-1">
-          <nav className="space-y-1">
-            {[
-              { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard', active: true },
-              { icon: <MapIcon size={18} />, label: 'Live Maps', path: '/create-complaint' },
-              { icon: <Activity size={18} />, label: 'Activity', path: '/activity' },
-            ].map((item, i) => (
-              <Link 
-                key={i}
-                to={item.path} 
-                className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold transition-all ${item.active ? 'bg-[#E3FCF7] text-[#00684A] border-l-4 border-[#00684A]' : 'text-slate-500 hover:bg-slate-50'}`}
-              >
-                {item.icon}
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="pt-8">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-4 mb-4">Configuration</p>
-            <nav className="space-y-1">
-              <Link to="/settings" className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all">
-                <Settings size={18} />
-                Settings
-              </Link>
-              <Link to="/support" className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all">
-                <HelpCircle size={18} />
-                Help Center
-              </Link>
-            </nav>
-          </div>
-        </div>
-
-        <div className="p-4 m-6 bg-[#001E2B] rounded-xl text-white space-y-4">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#00ED64]">Professional Account</p>
-          <p className="text-sm font-medium opacity-80">Access city-wide AI analytics and real-time alerts.</p>
-          <button className="w-full py-2 bg-[#00ED64] text-[#001E2B] font-bold rounded text-xs hover:bg-[#00d65a] transition-all">
-            Upgrade Now
-          </button>
-        </div>
-
-        <div className="p-6 border-t border-slate-100">
-          <button 
-            onClick={logout}
-            className="flex items-center gap-3 px-4 py-2 text-sm font-bold text-slate-500 hover:text-rose-600 transition-colors w-full"
-          >
-            <LogOut size={18} />
-            Logout Session
-          </button>
-        </div>
-      </aside>
-
+    <div className="flex min-h-screen bg-[#F9FBFA]">
+      <Sidebar />
       {/* Main Content */}
-      <main className="flex-1 lg:ml-64 p-8">
+      <main className="flex-1 lg:ml-72 p-8 pt-24 lg:pt-8">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div className="space-y-1">
             <div className="flex items-center gap-2 px-2 py-0.5 rounded bg-[#E3FCF7] text-[#00684A] w-fit">
