@@ -14,13 +14,13 @@ const Globe = () => {
       height: 900,
       phi: 0,
       theta: 0,
-      dark: 0,
+      dark: 1, // dark map (white dots)
       diffuse: 1.2,
-      mapSamples: 16000,
+      mapSamples: 24000,
       mapBrightness: 6,
-      baseColor: [1, 1, 1], // White globe
+      baseColor: [0.05, 0.05, 0.05], // Dark globe base
       markerColor: [0, 0.93, 0.39], // #00ED64 (MongoDB green)
-      glowColor: [1, 1, 1], // White glow
+      glowColor: [0.1, 0.1, 0.1], // Subtle dark glow
       markers: [
         { location: [20.5937, 78.9629], size: 0.08 }, // India
         { location: [37.7749, -122.4194], size: 0.05 }, // SF
