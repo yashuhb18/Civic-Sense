@@ -45,6 +45,13 @@ const IssueMap = ({ category, status }) => {
     }
   };
 
+  const getFullImageUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('data:')) return url;
+    if (url.startsWith('http')) return url;
+    return `${import.meta.env.VITE_API_URL.replace('/api', '')}${url}`;
+  };
+
   if (loading) return (
     <div className="h-[500px] w-full flex items-center justify-center bg-slate-50 rounded-3xl border border-slate-200">
       <div className="flex flex-col items-center space-y-4">
@@ -74,7 +81,7 @@ const IssueMap = ({ category, status }) => {
               <div className="w-64 overflow-hidden">
                 {issue.imageUrl && (
                   <img
-                    src={`${import.meta.env.VITE_API_URL.replace('/api', '')}${issue.imageUrl}`}
+                    src={getFullImageUrl(issue.imageUrl)}
                     alt={issue.title}
                     className="w-full h-32 object-cover rounded-t-lg -mt-4 -mx-4 mb-3"
                   />
