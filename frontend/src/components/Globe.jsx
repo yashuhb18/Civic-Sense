@@ -1,7 +1,43 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import createGlobe from 'cobe';
 
 const Globe = () => {
+  const canvasRef = useRef();
+
+  useEffect(() => {
+    let phi = 0;
+    
+    const globe = createGlobe(canvasRef.current, {
+      devicePixelRatio: 2,
+      width: 900,
+      height: 900,
+      phi: 0,
+      theta: 0,
+      dark: 0,
+      diffuse: 1.2,
+      mapSamples: 16000,
+      mapBrightness: 6,
+      baseColor: [1, 1, 1], // White globe
+      markerColor: [0, 0.93, 0.39], // #00ED64 (MongoDB green)
+      glowColor: [1, 1, 1], // White glow
+      markers: [
+        { location: [20.5937, 78.9629], size: 0.08 }, // India
+        { location: [37.7749, -122.4194], size: 0.05 }, // SF
+        { location: [51.5074, -0.1278], size: 0.05 }, // London
+        { location: [-33.8688, 151.2093], size: 0.05 } // Sydney
+      ],
+      onRender: (state) => {
+        state.phi = phi;
+        phi += 0.005;
+      }
+    });
+
+    return () => {
+      globe.destroy();
+    };
+  }, []);
+
   return (
     <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
       {/* 🌍 MONGODB ATLAS STYLE GLOBE */}
@@ -9,23 +45,12 @@ const Globe = () => {
         {/* Subtle Outer Glow */}
         <div className="absolute inset-0 bg-[#00ED64]/10 rounded-full blur-[60px]" />
         
-        {/* The Sphere */}
-        <div className="absolute inset-0 rounded-full bg-white overflow-hidden border border-slate-200 shadow-[inset_0_0_80px_rgba(0,104,74,0.1),0_10px_30px_rgba(0,0,0,0.05)]">
-          
-          {/* Rotating Map Layer (Green continents) */}
-          <motion.div 
-            animate={{ x: [-1000, 0] }}
-            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="absolute top-0 left-0 h-full w-[2000px] opacity-80"
-            style={{
-              backgroundImage: `url('https://www.transparenttextures.com/patterns/world-map.png')`,
-              backgroundSize: '1000px 100%',
-              filter: 'invert(37%) sepia(93%) saturate(543%) hue-rotate(119deg) brightness(92%) contrast(101%)' // MongoDB Green
-            }}
-          />
-
-          {/* Glossy Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-white/40" />
+        {/* The Cobe Globe */}
+        <div className="absolute inset-0 flex items-center justify-center">
+            <canvas
+              ref={canvasRef}
+              style={{ width: '100%', height: '100%', contain: 'layout paint size', opacity: 0.9 }}
+            />
         </div>
 
         {/* Orbiting Ring (Thin Green) */}
