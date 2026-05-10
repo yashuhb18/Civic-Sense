@@ -134,7 +134,10 @@ const CreateIssue = () => {
       if (data.category) setCategory(data.category);
 
       if (data.isMock) {
-        toast.error('Using DEMO AI. Add Gemini API Key to backend/.env for real photo analysis.', { duration: 6000 });
+        toast('Using DEMO AI Mode. Add Gemini API Key for real photo analysis.', { 
+          icon: 'ℹ️',
+          duration: 5000 
+        });
       } else {
         toast.success('AI Analysis Complete! Fields auto-populated.');
       }
