@@ -245,17 +245,17 @@ const Home = () => {
       </section>
 
       {/* ⚙️ HOW IT WORKS */}
-      <section className="bg-slate-900 py-32 relative z-10 text-white overflow-hidden mt-12">
+      <section className="bg-[#F9FBFA] py-32 border-y border-slate-100 relative z-10 overflow-hidden mt-12">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
         <div className="container mx-auto px-6 relative">
           <FadeUp className="text-center mb-24">
-             <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-3 force-light-text-emerald">Workflow</p>
-             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight force-light-text">Three Steps to Resolution</h2>
+             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#00684A] mb-3">Workflow</p>
+             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Three Steps to Resolution</h2>
           </FadeUp>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 relative">
              {/* connecting line for desktop */}
-             <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-slate-800" />
+             <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-slate-200" />
              
              {[
                { step: '01', title: 'Capture & Report', desc: 'Snap a photo of the infrastructure issue. Our app automatically tags the exact GPS coordinates and timestamps the evidence.' },
@@ -263,11 +263,11 @@ const Home = () => {
                { step: '03', title: 'Swift Action', desc: 'Municipal authorities receive a prioritized dashboard to dispatch teams and update your report status in real-time.' }
              ].map((item, i) => (
                <FadeUp key={i} delay={i * 0.15} className="relative z-10 text-center space-y-6">
-                 <div className="w-24 h-24 mx-auto bg-slate-800 rounded-full border-8 border-slate-900 flex items-center justify-center shadow-2xl relative z-20">
-                   <span className="text-2xl font-black force-light-text-emerald">{item.step}</span>
+                 <div className="w-24 h-24 mx-auto bg-white rounded-full border-8 border-[#F9FBFA] flex items-center justify-center shadow-lg relative z-20">
+                   <span className="text-2xl font-black text-[#00684A]">{item.step}</span>
                  </div>
-                 <h3 className="text-2xl font-bold force-light-text">{item.title}</h3>
-                 <p className="leading-relaxed font-medium px-4 force-light-text-slate">{item.desc}</p>
+                 <h3 className="text-2xl font-bold text-slate-900">{item.title}</h3>
+                 <p className="leading-relaxed font-medium px-4 text-slate-500">{item.desc}</p>
                </FadeUp>
              ))}
           </div>
