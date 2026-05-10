@@ -65,6 +65,11 @@ h1:not(.sys-log), h2:not(.sys-log), h3:not(.sys-log), h4:not(.sys-log), p:not(.s
 .sys-log-purple { color: #c084fc !important; }
 .sys-log-slate { color: #94a3b8 !important; }
 
+/* Landing Page Dark Section overrides */
+.force-light-text { color: white !important; }
+.force-light-text-emerald { color: #34d399 !important; }
+.force-light-text-slate { color: #94a3b8 !important; }
+
 /* Special case for green text */
 .text-green-atlas {
   color: #00684A !important;
