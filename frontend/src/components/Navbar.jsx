@@ -40,7 +40,7 @@ const Navbar = () => {
             Home
           </Link>
           
-          {user && (
+          {user && user.role !== 'admin' && (
             <>
               <Link 
                 to="/dashboard" 
@@ -56,17 +56,27 @@ const Navbar = () => {
               </Link>
             </>
           )}
+          {user && user.role === 'admin' && (
+             <Link 
+                to="/admin" 
+                className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors text-[#00684A] hover:bg-[#E3FCF7]`}
+              >
+                Command Center
+              </Link>
+          )}
         </div>
 
         {/* Right Side Actions */}
         <div className="flex items-center space-x-4">
-          <Link 
-            to="/admin/login" 
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded border border-[#00684A]/20 text-[#00684A] text-[10px] font-bold tracking-widest hover:bg-[#E3FCF7] transition-all"
-          >
-            <Lock size={12} />
-            GOV PORTAL
-          </Link>
+          {(!user || user.role !== 'admin') && (
+            <Link 
+              to="/admin/login" 
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded border border-[#00684A]/20 text-[#00684A] text-[10px] font-bold tracking-widest hover:bg-[#E3FCF7] transition-all"
+            >
+              <Lock size={12} />
+              GOV PORTAL
+            </Link>
+          )}
 
           {user ? (
             <div className="flex items-center space-x-4 pl-4 border-l border-slate-200">

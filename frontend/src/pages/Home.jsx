@@ -139,9 +139,9 @@ const Home = () => {
                 className="flex flex-col sm:flex-row items-center gap-4"
               >
                 {user ? (
-                  <Link to="/dashboard" className="w-full sm:w-auto">
+                  <Link to={user.role === 'admin' ? "/admin" : "/dashboard"} className="w-full sm:w-auto">
                     <button className="btn-atlas-primary w-full h-14 text-lg">
-                      Enter Dashboard <ArrowRight size={20} />
+                      {user.role === 'admin' ? 'Enter Command Center' : 'Enter Dashboard'} <ArrowRight size={20} />
                     </button>
                   </Link>
                 ) : (
