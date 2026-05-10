@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-  ArrowRight, ShieldCheck, Activity, Search
+  ArrowRight, ShieldCheck, Activity, Search, CheckCircle2, MapPin, Zap, Lock
 } from 'lucide-react';
 import { motion, useInView, useAnimation } from 'framer-motion';
 import GlobeComponent from '../components/Globe';
@@ -80,6 +80,24 @@ const Home = () => {
       title: 'AI Analysis',
       desc: 'Automatic categorization, severity detection, and department routing for every report.',
       color: 'bg-[#E3FCF7]',
+    },
+    {
+      icon: <MapPin size={22} className="text-indigo-500" />,
+      title: 'Geospatial Mapping',
+      desc: 'Interactive city-wide heatmaps to visualize recurring issues and allocate resources effectively.',
+      color: 'bg-indigo-50',
+    },
+    {
+      icon: <Zap size={22} className="text-amber-500" />,
+      title: 'Real-Time Updates',
+      desc: 'Receive push notifications and email alerts the moment authorities take action on your report.',
+      color: 'bg-amber-50',
+    },
+    {
+      icon: <Lock size={22} className="text-rose-500" />,
+      title: 'Anonymous Mode',
+      desc: 'Report sensitive local issues anonymously without sacrificing the ability to track resolution progress.',
+      color: 'bg-rose-50',
     },
   ];
 
@@ -174,7 +192,89 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ✨ FEATURE CARDS — scroll-triggered stagger */}
+      {/* 📖 ABOUT SECTION */}
+      <section className="py-24 container mx-auto px-6 relative z-10 border-t border-slate-100">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <FadeUp>
+             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 aspect-square lg:aspect-[4/3] bg-slate-900 flex items-center justify-center group">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#00684A]/40 to-slate-900 opacity-80 mix-blend-overlay z-10 transition-opacity group-hover:opacity-60" />
+                <div className="absolute inset-0 atlas-grid-bg opacity-20" />
+                <div className="relative z-20 w-3/4 h-3/4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 flex flex-col justify-between transform transition-transform group-hover:scale-105 duration-500">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
+                    <div className="w-16 h-2 rounded bg-white/20" />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="w-full h-2 rounded bg-white/20" />
+                    <div className="w-5/6 h-2 rounded bg-white/20" />
+                    <div className="w-4/6 h-2 rounded bg-white/20" />
+                  </div>
+                  <div className="mt-8 flex justify-end">
+                     <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center">
+                       <ArrowRight className="text-white/50" size={20} />
+                     </div>
+                  </div>
+                </div>
+             </div>
+          </FadeUp>
+          <FadeUp delay={0.2} className="space-y-6">
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#00684A]">About CivicSync</p>
+            <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              Empowering Citizens. <br />Enabling Governments.
+            </h2>
+            <p className="text-lg text-slate-500 leading-relaxed font-medium">
+              CivicSync was born from a simple idea: urban problem-solving should be transparent, instantaneous, and data-driven. We replace outdated bureaucratic red tape with real-time geospatial intelligence and machine learning.
+            </p>
+            <ul className="space-y-4 pt-6">
+              {[
+                'Open API for Municipal Integration', 
+                'End-to-End Encrypted Data Pipelines', 
+                'Automated SLA Tracking & Escalation',
+                'Predictive Infrastructure Maintenance'
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-4 text-slate-700 font-bold text-sm">
+                  <div className="w-8 h-8 rounded-full bg-[#E3FCF7] flex items-center justify-center text-[#00684A] shrink-0">
+                    <CheckCircle2 size={16} />
+                  </div>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ⚙️ HOW IT WORKS */}
+      <section className="bg-slate-900 py-32 relative z-10 text-white overflow-hidden mt-12">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
+        <div className="container mx-auto px-6 relative">
+          <FadeUp className="text-center mb-24">
+             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-400 mb-3">Workflow</p>
+             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">Three Steps to Resolution</h2>
+          </FadeUp>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 relative">
+             {/* connecting line for desktop */}
+             <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-slate-800" />
+             
+             {[
+               { step: '01', title: 'Capture & Report', desc: 'Snap a photo of the infrastructure issue. Our app automatically tags the exact GPS coordinates and timestamps the evidence.' },
+               { step: '02', title: 'AI Processing', desc: 'Our machine learning models analyze the severity, categorize the problem, and route it to the correct department instantly.' },
+               { step: '03', title: 'Swift Action', desc: 'Municipal authorities receive a prioritized dashboard to dispatch teams and update your report status in real-time.' }
+             ].map((item, i) => (
+               <FadeUp key={i} delay={i * 0.15} className="relative z-10 text-center space-y-6">
+                 <div className="w-24 h-24 mx-auto bg-slate-800 rounded-full border-8 border-slate-900 flex items-center justify-center shadow-2xl relative z-20">
+                   <span className="text-2xl font-black text-emerald-400">{item.step}</span>
+                 </div>
+                 <h3 className="text-2xl font-bold">{item.title}</h3>
+                 <p className="text-slate-400 leading-relaxed font-medium px-4">{item.desc}</p>
+               </FadeUp>
+             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ✨ FEATURE CARDS */}
       <section className="py-32 container mx-auto px-6 relative z-10">
         <FadeUp className="text-center mb-16">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#00684A] mb-3">Why CivicSync</p>
@@ -185,21 +285,23 @@ const Home = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feat, i) => (
-            <FadeUp key={i} delay={i * 0.12}>
+            <FadeUp key={i} delay={i * 0.1}>
               <motion.div
-                className="atlas-card p-10 space-y-6 h-full cursor-default"
+                className="atlas-card p-10 space-y-6 h-full cursor-default flex flex-col"
                 whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(0,104,74,0.10)' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               >
                 <motion.div
-                  className={`w-12 h-12 rounded-xl ${feat.color} flex items-center justify-center`}
+                  className={`w-14 h-14 rounded-2xl ${feat.color} flex items-center justify-center shrink-0`}
                   whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
                   transition={{ duration: 0.4 }}
                 >
                   {feat.icon}
                 </motion.div>
-                <h3 className="text-xl font-bold" style={{ color: '#001E2B' }}>{feat.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: '#64748b' }}>{feat.desc}</p>
+                <div className="flex-1 space-y-3">
+                  <h3 className="text-xl font-bold" style={{ color: '#001E2B' }}>{feat.title}</h3>
+                  <p className="text-sm font-medium leading-relaxed" style={{ color: '#64748b' }}>{feat.desc}</p>
+                </div>
               </motion.div>
             </FadeUp>
           ))}
