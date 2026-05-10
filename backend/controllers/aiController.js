@@ -61,8 +61,8 @@ exports.analyzeImage = async (req, res) => {
       return res.json({ ...responseData, isMock: true });
     }
 
-    // Use Gemini 1.5 Flash for fast analysis
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Use Gemini 2.5 Flash for fast analysis
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const imageBuffer = fs.readFileSync(req.file.path);
     const imageData = {
