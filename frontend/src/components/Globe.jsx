@@ -13,23 +13,22 @@ const Globe = () => {
     const size = el.clientWidth;
 
     const scene = new THREE.Scene();
-    // Aspect ratio MUST be 1:1 for a perfectly round sphere
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.z = 5.5;
+    // 1:1 aspect so the sphere is always a perfect circle
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.z = 7.5; // Far enough that the entire sphere fits inside the frame
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(size, size);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setClearColor(0x000000, 0); // Fully transparent background
+    renderer.setClearColor(0x000000, 0);
     el.appendChild(renderer.domElement);
 
-    // Style the canvas to fill the square container
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     renderer.domElement.style.display = 'block';
 
-    // Dense wireframe sphere
-    const geometry = new THREE.SphereGeometry(2.2, 72, 72);
+    // Dense wireframe sphere — smaller radius so it never clips
+    const geometry = new THREE.SphereGeometry(2.0, 72, 72);
     const material = new THREE.MeshBasicMaterial({
       color: 0x3b82f6,
       wireframe: true,
