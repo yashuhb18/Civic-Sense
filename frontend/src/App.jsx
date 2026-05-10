@@ -12,6 +12,9 @@ import PrivateRoute from './components/PrivateRoute';
 import IssueDetails from './pages/IssueDetails';
 import CreateIssue from './pages/CreateIssue';
 import AdminLogin from './pages/AdminLogin';
+import Activity from './pages/Activity';
+import Settings from './pages/Settings';
+import Support from './pages/Support';
 
 function App() {
   return (
@@ -39,6 +42,21 @@ function App() {
             <Route path="/complaint/:id" element={
               <PrivateRoute>
                 <IssueDetails />
+              </PrivateRoute>
+            } />
+            <Route path="/activity" element={
+              <PrivateRoute>
+                <Activity />
+              </PrivateRoute>
+            } />
+            <Route path="/settings" element={
+              <PrivateRoute>
+                <Settings />
+              </PrivateRoute>
+            } />
+            <Route path="/support" element={
+              <PrivateRoute>
+                <Support />
               </PrivateRoute>
             } />
 
