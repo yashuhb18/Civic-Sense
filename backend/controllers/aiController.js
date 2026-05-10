@@ -64,8 +64,16 @@ exports.analyzeImage = async (req, res) => {
     // Use Gemini 2.5 Flash for fast analysis
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // Get image buffer (handles both memory and disk storage)
-    const imageBuffer = req.file.buffer || fs.readFileSync(req.file.path);
+    // Get image buffer safely
+    let imageBuffer;
+    if (req.file.buffer) {
+      imageBuffer = req.file.buffer;
+    } else if (req.file.path) {
+      imageBuffer = fs.readFileSync(req.file.path);
+    } else {
+      throw new Error("No image data found in upload.");
+    }
+
     const imageData = {
       inlineData: {
         data: imageBuffer.toString("base64"),
@@ -77,12 +85,12 @@ exports.analyzeImage = async (req, res) => {
     Return a JSON object with:
     1. "title": A concise title (max 10 words).
     2. "description": A detailed description (max 50 words).
-    3. "category": One of: "Roads", "Water", "Electricity", "Waste", "Safety", "Others".
+    3. "category": One of: "Roads", "Water", "Electricity", "Waste", "Sanitation", "Safety", "Other". (NOTE: This field MUST be in English regardless of the selected language).
     4. "aiPriorityScore": A number from 0-100 based on severity and risk.
     5. "impactSummary": A brief summary of how this affects citizens (max 30 words).
     6. "department": The specific government department that should handle this (e.g., PWD, BESCOM, BWSSB).
     
-    The text MUST be in ${language}.
+    The title, description, and impactSummary MUST be in ${language}.
     Response MUST be valid JSON only.`;
 
     const result = await model.generateContent([prompt, imageData]);
