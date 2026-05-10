@@ -281,29 +281,29 @@ const AdminPanel = () => {
 
         {activeTab === 'System Logs' && (
           <div className="atlas-card p-6 bg-slate-900 font-mono text-xs overflow-y-auto h-[600px] animate-slide-up flex flex-col">
-            <div className="mb-4 text-slate-400 flex justify-between border-b border-slate-800 pb-4">
-              <span className="font-bold tracking-widest">SYSTEM AUDIT TRAIL</span>
-              <span className="opacity-50">Press CTRL+C to abort</span>
+            <div className="mb-4 flex justify-between border-b border-slate-800 pb-4">
+              <span className="font-bold tracking-widest sys-log sys-log-slate">SYSTEM AUDIT TRAIL</span>
+              <span className="opacity-50 sys-log sys-log-slate">Press CTRL+C to abort</span>
             </div>
             <div className="space-y-3 flex-1 overflow-y-auto pr-4 custom-scrollbar">
               {logs.map((log, i) => {
-                let colorClass = 'text-emerald-400 !important';
-                if (log.includes('WARN')) colorClass = 'text-amber-400 !important';
-                if (log.includes('SECURITY') || log.includes('ERROR')) colorClass = 'text-rose-400 !important';
-                if (log.includes('INFO') || log.includes('NETWORK')) colorClass = 'text-blue-400 !important';
-                if (log.includes('AI_ENGINE')) colorClass = 'text-purple-400 !important';
+                let colorClass = 'sys-log-green';
+                if (log.includes('WARN')) colorClass = 'sys-log-amber';
+                if (log.includes('SECURITY') || log.includes('ERROR')) colorClass = 'sys-log-rose';
+                if (log.includes('INFO') || log.includes('NETWORK')) colorClass = 'sys-log-blue';
+                if (log.includes('AI_ENGINE')) colorClass = 'sys-log-purple';
                 
                 return (
-                  <p key={i} className="leading-relaxed" style={{ color: colorClass.includes('emerald') ? '#34d399' : colorClass.includes('amber') ? '#fbbf24' : colorClass.includes('rose') ? '#fb7185' : colorClass.includes('blue') ? '#60a5fa' : colorClass.includes('purple') ? '#c084fc' : '#34d399' }}>
+                  <p key={i} className={`leading-relaxed sys-log ${colorClass}`}>
                     {log}
                   </p>
                 );
               })}
             </div>
-            <div className="mt-4 pt-4 border-t border-slate-800 flex items-center gap-3" style={{ color: '#34d399' }}>
-              <Terminal size={16} />
-              <div className="flex-1 flex">
-                <span className="mr-2">gov-root@civicsync:~$</span>
+            <div className="mt-4 pt-4 border-t border-slate-800 flex items-center gap-3">
+              <Terminal size={16} className="text-emerald-400" />
+              <div className="flex-1 flex items-center">
+                <span className="mr-2 sys-log sys-log-green">gov-root@civicsync:~$</span>
                 <span className="animate-pulse w-2 h-4 bg-emerald-400 block mt-0.5" />
               </div>
             </div>

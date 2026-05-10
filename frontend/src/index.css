@@ -49,10 +49,21 @@
   }
 }
 
-/* Force dark text for visibility */
-h1, h2, h3, h4, p, span, label {
+/* Force dark text for visibility, except for terminal logs */
+h1:not(.sys-log), h2:not(.sys-log), h3:not(.sys-log), h4:not(.sys-log), p:not(.sys-log), span:not(.sys-log), label:not(.sys-log) {
   color: #001E2B !important;
 }
+
+/* Terminal System Logs Colors */
+.sys-log {
+  /* default terminal color if not specified */
+}
+.sys-log-green { color: #34d399 !important; }
+.sys-log-amber { color: #fbbf24 !important; }
+.sys-log-rose { color: #fb7185 !important; }
+.sys-log-blue { color: #60a5fa !important; }
+.sys-log-purple { color: #c084fc !important; }
+.sys-log-slate { color: #94a3b8 !important; }
 
 /* Special case for green text */
 .text-green-atlas {
