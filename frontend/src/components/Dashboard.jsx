@@ -64,32 +64,32 @@ const Dashboard = () => {
         <div className="p-6 space-y-8 flex-1">
           <nav className="space-y-1">
             {[
-              { icon: <LayoutDashboard size={18} />, label: 'Dashboard', active: true },
-              { icon: <MapIcon size={18} />, label: 'Live Maps' },
-              { icon: <Activity size={18} />, label: 'Activity' },
+              { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard', active: true },
+              { icon: <MapIcon size={18} />, label: 'Live Maps', path: '/create-complaint' },
+              { icon: <Activity size={18} />, label: 'Activity', path: '/activity' },
             ].map((item, i) => (
-              <a 
+              <Link 
                 key={i}
-                href="#" 
+                to={item.path} 
                 className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold transition-all ${item.active ? 'bg-[#E3FCF7] text-[#00684A] border-l-4 border-[#00684A]' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 {item.icon}
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
           <div className="pt-8">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-4 mb-4">Configuration</p>
             <nav className="space-y-1">
-              <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all">
+              <Link to="/settings" className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all">
                 <Settings size={18} />
                 Settings
-              </a>
-              <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all">
+              </Link>
+              <Link to="/support" className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all">
                 <HelpCircle size={18} />
                 Help Center
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
