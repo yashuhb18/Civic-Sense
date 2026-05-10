@@ -24,12 +24,12 @@ const Globe = () => {
     el.appendChild(renderer.domElement);
 
     // --- Wireframe Globe ---
-    const geometry = new THREE.SphereGeometry(2.2, 64, 64);
+    const geometry = new THREE.SphereGeometry(2.4, 72, 72);
     const material = new THREE.MeshBasicMaterial({
-      color: 0x3b82f6,
+      color: 0x60a5fa,  // Vivid bright blue
       wireframe: true,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.55,
     });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
