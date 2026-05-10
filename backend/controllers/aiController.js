@@ -85,7 +85,7 @@ exports.analyzeImage = async (req, res) => {
     Return a JSON object with:
     1. "title": A concise title (max 10 words).
     2. "description": A detailed description (max 50 words).
-    3. "category": One of: "Roads", "Water", "Electricity", "Waste", "Sanitation", "Safety", "Other". (NOTE: This field MUST be in English regardless of the selected language).
+    3. "category": EXACTLY one of: "Roads", "Water", "Electricity", "Waste", "Sanitation", "Safety", "Other". (CRITICAL: THIS FIELD MUST BE ENGLISH ONLY).
     4. "aiPriorityScore": A number from 0-100 based on severity and risk.
     5. "impactSummary": A brief summary of how this affects citizens (max 30 words).
     6. "department": The specific government department that should handle this (e.g., PWD, BESCOM, BWSSB).
@@ -105,6 +105,30 @@ exports.analyzeImage = async (req, res) => {
     }
     
     const analysis = JSON.parse(jsonMatch[0]);
+
+    // MAP TRANSLATED CATEGORIES BACK TO ENGLISH ENUMS
+    const categoryMap = {
+      // Kannada
+      'ರಸ್ತೆಗಳು': 'Roads', 'ರಸ್ತೆ': 'Roads',
+      'ನೀರು': 'Water', 'ಜಲ': 'Water',
+      'ವಿದ್ಯುತ್': 'Electricity', 'ಕರೆಂಟ್': 'Electricity',
+      'ತ್ಯಾಜ್ಯ': 'Waste', 'ಕಸ': 'Waste',
+      'ನೈರ್ಮಲ್ಯ': 'Sanitation', 'ಶೌಚಾಲಯ': 'Sanitation',
+      'ಸುರಕ್ಷತೆ': 'Safety', 'ರಕ್ಷಣೆ': 'Safety',
+      'ಇತರೆ': 'Other', 'ಇತರ': 'Other',
+      // Hindi
+      'सड़क': 'Roads', 'मार्ग': 'Roads',
+      'पानी': 'Water', 'जल': 'Water',
+      'बिजली': 'Electricity', 'विद्युत': 'Electricity',
+      'कचरा': 'Waste', 'अपशिष्ट': 'Waste',
+      'स्वच्छता': 'Sanitation', 'सफाई': 'Sanitation',
+      'सुरक्षा': 'Safety', 'बचाव': 'Safety',
+      'अन्य': 'Other'
+    };
+
+    if (analysis.category && categoryMap[analysis.category]) {
+      analysis.category = categoryMap[analysis.category];
+    }
 
     res.json(analysis);
   } catch (error) {
