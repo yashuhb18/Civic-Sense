@@ -27,7 +27,7 @@ const IssueMap = ({ category, status }) => {
       if (category) params.category = category;
       if (status) params.status = status;
       const response = await api.get('/issues', { params });
-      setIssues(response.data);
+      setIssues(response.data.issues || []);
     } catch (error) {
       toast.error('Failed to load issues');
     } finally {
@@ -45,12 +45,13 @@ const IssueMap = ({ category, status }) => {
     }
   };
 
-  const getFullImageUrl = (url) => {
-    if (!url) return null;
-    if (url.startsWith('data:')) return url;
-    if (url.startsWith('http')) return url;
-    return `${import.meta.env.VITE_API_URL.replace('/api', '')}${url}`;
-  };
+    const getFullImageUrl = (url) => {
+      if (!url) return null;
+      if (url.startsWith('data:')) return url;
+      if (url.startsWith('http')) return url;
+      const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
+      return `${baseUrl}${url}`;
+    };
 
   if (loading) return (
     <div className="h-[500px] w-full flex items-center justify-center bg-slate-50 rounded-3xl border border-slate-200">
