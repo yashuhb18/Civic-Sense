@@ -16,26 +16,23 @@ const Home = () => {
   return (
     <div className="bg-white min-h-screen selection:bg-[#E3FCF7] pt-16">
       {/* 🏛️ CIVICSYNC HERO */}
-      <section className="relative overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[90vh]">
-          {/* Left: Light Content Side */}
-          <div className="flex items-center py-20 lg:py-0 px-8 lg:px-16 relative">
-            <div className="absolute inset-0 atlas-grid-bg pointer-events-none" />
-            <div className="relative z-10 space-y-8 max-w-xl">
+      <section className="relative py-20 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 atlas-grid-bg pointer-events-none" />
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Text */}
+            <div className="space-y-8">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#E3FCF7] border border-[#00684A]/10">
                 <div className="w-2 h-2 rounded-full bg-[#00ED64] animate-pulse" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#00684A]">Live Municipal Pulse Active</span>
               </div>
-
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]" style={{ color: '#001E2B' }}>
                 Modernize <br />
                 Your <span style={{ color: '#00684A' }}>City's Infrastructure.</span>
               </h1>
-
               <p className="text-lg md:text-xl max-w-xl font-semibold leading-relaxed" style={{ color: '#475569' }}>
                 The unified platform for smart municipal management. Bridging the gap between active citizens and efficient government through AI-driven transparency.
               </p>
-
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 {user ? (
                   <Link to="/dashboard" className="w-full sm:w-auto">
@@ -61,21 +58,10 @@ const Home = () => {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Right: Dark Globe Side */}
-          <div className="relative flex items-center justify-center bg-[#020c18] overflow-hidden min-h-[500px] lg:min-h-0">
-            {/* Deep space gradient */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#0a1628_0%,_#020c18_70%)]" />
-            {/* Ambient glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-700/20 rounded-full blur-[80px]" />
-            {/* Globe */}
-            <div className="relative w-full h-full">
+            {/* Right: Globe */}
+            <div className="flex items-center justify-center">
               <GlobeComponent />
-            </div>
-            {/* Bottom text overlay */}
-            <div className="absolute bottom-6 left-6 text-[9px] font-bold uppercase tracking-[0.3em] text-blue-400/50">
-              SCAN_ID: HS_6.0_SYSTEM_READY
             </div>
           </div>
         </div>
