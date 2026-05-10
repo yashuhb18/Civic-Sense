@@ -49,6 +49,13 @@ const Dashboard = () => {
     }
   };
 
+  const getFullImageUrl = (url) => {
+    if (!url) return 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=800&q=80';
+    if (url.startsWith('data:')) return url;
+    if (url.startsWith('http')) return url;
+    return `${backendUrl}${url}`;
+  };
+
   return (
     <div className="flex min-h-screen bg-[#F9FBFA] pt-16">
       {/* 🟢 ATLAS STYLE SIDEBAR */}
@@ -188,7 +195,7 @@ const Dashboard = () => {
                   <Link to={`/complaint/${issue._id}`}>
                     <div className="relative aspect-video overflow-hidden">
                       <img 
-                        src={issue.imageUrl ? `${backendUrl}${issue.imageUrl}` : 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=800&q=80'} 
+                        src={getFullImageUrl(issue.imageUrl)} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         alt={issue.title}
                       />

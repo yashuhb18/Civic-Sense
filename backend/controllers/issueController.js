@@ -87,6 +87,14 @@ exports.createIssue = async (req, res) => {
 
     const parsedLocation = typeof location === 'string' ? JSON.parse(location) : location;
 
+    let imageUrl = '';
+    if (req.file) {
+      // Convert buffer to Base64 string
+      const b64 = Buffer.from(req.file.buffer).toString('base64');
+      const mimeType = req.file.mimetype;
+      imageUrl = `data:${mimeType};base64,${b64}`;
+    }
+
     const issue = new Issue({
       title,
       description,
@@ -96,7 +104,7 @@ exports.createIssue = async (req, res) => {
       impactSummary: impactSummary || '',
       department: department || 'General',
       location: parsedLocation,
-      imageUrl: req.file ? `/uploads/${req.file.filename}` : '',
+      imageUrl: imageUrl,
       reportedBy: req.userId,
       status: 'submitted',
       timeline: [{

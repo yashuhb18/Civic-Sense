@@ -63,6 +63,13 @@ const AdminPanel = () => {
     }
   };
 
+  const getFullImageUrl = (url) => {
+    if (!url) return 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=100&q=60';
+    if (url.startsWith('data:')) return url;
+    if (url.startsWith('http')) return url;
+    return `${backendUrl}${url}`;
+  };
+
   const chartData = [
     { name: 'Pending', value: stats.pending, color: '#F59E0B' },
     { name: 'In Progress', value: stats.inProgress, color: '#6366F1' },
@@ -238,7 +245,7 @@ const AdminPanel = () => {
                     <td className="px-6 py-4">
                       <div className="w-14 h-14 rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
                         <img 
-                          src={issue.imageUrl ? `${backendUrl}${issue.imageUrl}` : 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=100&q=60'}
+                          src={getFullImageUrl(issue.imageUrl)}
                           alt={issue.title}
                           className="w-full h-full object-cover"
                         />

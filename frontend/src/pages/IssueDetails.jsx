@@ -61,6 +61,8 @@ const IssueDetails = () => {
 
   const getIssueImageUrl = (url) => {
     if (!url) return 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=800&q=80';
+    if (url.startsWith('data:')) return url;
+    if (url.startsWith('http')) return url;
     return `${import.meta.env.VITE_API_URL.replace('/api', '')}${url}`;
   };
 

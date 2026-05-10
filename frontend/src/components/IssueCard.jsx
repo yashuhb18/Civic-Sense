@@ -26,6 +26,8 @@ const IssueCard = ({ issue, onStatusUpdate, isAdmin = false }) => {
 
   const getFullImageUrl = (url) => {
     if (!url) return 'https://via.placeholder.com/600x400?text=CivicSync+No+Image';
+    if (url.startsWith('data:')) return url;
+    if (url.startsWith('http')) return url;
     const backendUrl = import.meta.env.VITE_API_URL.replace('/api', '');
     return `${backendUrl}${url}`;
   };
